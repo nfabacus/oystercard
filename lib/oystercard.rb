@@ -1,6 +1,7 @@
 class Oystercard
 
 LIMIT = 90
+MIN_BALANCE = 1
 
 attr_accessor :balance
 
@@ -19,7 +20,12 @@ def deduct(amount)
 end
 
 def touch_in
-  @in_journey = true
+  if @balance > MIN_BALANCE
+    @in_journey = true
+  else
+    error = 'Insufficient balance'
+    raise error
+  end
 end
 
 def touch_out

@@ -30,11 +30,14 @@ describe Oystercard do
   end
 
 
-
-
-
   it "Can be touched in" do
+    card.top_up(1)
     expect(card.touch_in).to eq true
+  end
+
+  it "Raises an error when insufficient blance" do
+    error = 'Insufficient balance'
+    expect{ card.touch_in }.to raise_error error
   end
 
   it "Can be touched out" do
