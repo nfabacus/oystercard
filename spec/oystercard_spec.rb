@@ -24,4 +24,25 @@ describe Oystercard do
     end
   end
 
+  context "checking and updating card status (in use or not)" do
+    it 'checks card touch in works' do
+      expect(subject).to respond_to(:touch_in)
+    end
+    it 'updates card status to "In use" when touching in' do
+      subject.touch_in
+      expect(subject.card_status).to eq "In use"
+    end
+    it 'checks card touch out works' do
+      expect(subject).to respond_to(:touch_out)
+    end
+    it 'updates card status to "Not in use" when touching out' do
+      subject.touch_out
+      expect(subject.card_status).to eq "Not in use"
+    end
+    it 'reveals the status of the card as being in use' do
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+  end
+
 end
