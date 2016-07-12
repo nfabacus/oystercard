@@ -14,10 +14,14 @@ describe Oystercard do
       # or
       maximum_balance = Oystercard::MAX_BALANCE
       subject.top_up(maximum_balance)
-      expect{ subject.top_up 1 }.to raise_error 'Maximum balance exceeded'
+      expect { subject.top_up 1 }.to raise_error "Maximum balance of #{maximum_balance} exceeded"
     end
-
-
   end
+  #
+  # context "pay fares" do
+  #   it 'deduct fares from balance on Oystercard' do
+  #     expect(subject).not_to eq object
+  #   end
+  # end
 
 end
