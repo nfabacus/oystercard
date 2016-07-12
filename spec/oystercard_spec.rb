@@ -10,7 +10,10 @@ describe Oystercard do
     end
 
     it 'retricts top-ups to the maximum balance allowed' do
-      expect {subject.top_up(91)}.to raise_error "Maximum balance exceeded"
+      # expect {subject.top_up(91)}.to raise_error "Maximum balance exceeded"
+      maximum_balance = Oystercard::MAX_BALANCE
+      subject.top_up(maximum_balance)
+      expect{ subject.top_up 1 }.to raise_error 'Maximum balance exceeded'
     end
 
 
