@@ -29,7 +29,7 @@ describe Oystercard do
       expect(subject).to respond_to(:touch_in)
     end
     it 'updates card status to "In use" when touching in' do
-      subject.top_up(Oystercard::MIN_BALANCE)
+      subject.top_up(Oystercard::MIN_FARE)
       subject.touch_in
       expect(subject.card_status).to eq "In use"
     end
@@ -41,12 +41,15 @@ describe Oystercard do
     it 'checks card touch out works' do
       expect(subject).to respond_to(:touch_out)
     end
+    it 'deducts the fare from balance on touch out' do
+      expect{ subject.touch_out }.to change{ subject.balance }.by -Oystercard::MIN_FARE
+    end
     it 'updates card status to "Not in use" when touching out' do
       subject.touch_out
       expect(subject.card_status).to eq "Not in use"
     end
     it 'reveals the status of the card as being in use' do
-      subject.top_up(Oystercard::MIN_BALANCE)
+      subject.top_up(Oystercard::MIN_FARE)
       subject.touch_in
       expect(subject).to be_in_journey
     end

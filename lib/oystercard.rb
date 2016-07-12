@@ -4,7 +4,7 @@ class Oystercard
   attr_reader :card_status
 
   MAX_BALANCE = 90
-  MIN_BALANCE = 1
+  MIN_FARE = 1
 
   def initialize
     @balance = 0
@@ -16,12 +16,12 @@ class Oystercard
     @balance += amount
   end
 
-  def deduct(fare)
+  def deduct(fare=MIN_FARE)
     @balance -= fare
   end
 
   def touch_in
-    fail "Not enough funds" if @balance < MIN_BALANCE
+    fail "Not enough funds" if @balance < MIN_FARE
     @card_status = "In use"
   end
 
@@ -34,6 +34,7 @@ class Oystercard
   end
 
   def touch_out
+    deduct
     @card_status = "Not in use"
   end
 end
