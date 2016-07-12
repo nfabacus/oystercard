@@ -16,10 +16,6 @@ class Oystercard
     @balance += amount
   end
 
-  def deduct(fare=MIN_FARE)
-    @balance -= fare
-  end
-
   def touch_in
     fail "Not enough funds" if @balance < MIN_FARE
     @card_status = "In use"
@@ -34,7 +30,12 @@ class Oystercard
   end
 
   def touch_out
-    deduct
+    deduct(MIN_FARE)
     @card_status = "Not in use"
+  end
+
+  private
+  def deduct(fare)
+    @balance -= fare
   end
 end
