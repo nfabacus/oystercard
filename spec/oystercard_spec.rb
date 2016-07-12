@@ -29,9 +29,15 @@ describe Oystercard do
       expect(subject).to respond_to(:touch_in)
     end
     it 'updates card status to "In use" when touching in' do
+      subject.top_up(Oystercard::MIN_BALANCE)
       subject.touch_in
       expect(subject.card_status).to eq "In use"
     end
+    it "raises an error on touch in when balance is less than 1" do
+      subject.top_up(0.1)
+      expect{ subject.touch_in }.to raise_error("Not enough funds")
+    end
+
     it 'checks card touch out works' do
       expect(subject).to respond_to(:touch_out)
     end
@@ -40,6 +46,7 @@ describe Oystercard do
       expect(subject.card_status).to eq "Not in use"
     end
     it 'reveals the status of the card as being in use' do
+      subject.top_up(Oystercard::MIN_BALANCE)
       subject.touch_in
       expect(subject).to be_in_journey
     end
