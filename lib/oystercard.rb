@@ -9,8 +9,12 @@ def initialize
 end
 
 def top_up(amount)
-  raise "Top up would exceed card limit of £#{LIMIT}" if (amount + @balance) > LIMIT 
+  raise "Top up would exceed card limit of £#{LIMIT}" if (amount + @balance) > LIMIT
   @balance += amount
+end
+
+def deduct(amount)
+  @balance -= amount
 end
 
 end
