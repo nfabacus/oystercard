@@ -20,12 +20,8 @@ def deduct(amount)
 end
 
 def touch_in
-  if @balance > MIN_BALANCE
-    @in_journey = true
-  else
-    error = 'Insufficient balance'
-    raise error
-  end
+  raise 'Insufficient balance' if @balance < MIN_BALANCE
+  @in_journey = true
 end
 
 def touch_out
