@@ -33,7 +33,30 @@ describe Oystercard do
     end
   end
 
-  describe "#check_limit" do
+  describe '#in_journey?' do
+    it { is_expected.to respond_to(:in_journey?) } 
 
+    it 'should have default value of false' do
+      expect(subject.in_journey?).to eq (false)
+    end
+  end
+
+  context 'when user is in and out of journey' do
+   describe '#touch_in' do
+      it { is_expected.to respond_to(:touch_in) }
+
+      it 'should return true' do
+        subject.touch_in
+       expect(subject).to be_in_journey
+      end
+   end
+
+    describe '#touch_out' do
+     it { is_expected.to respond_to(:touch_out) }
+
+      it 'should return false' do
+        expect(subject.touch_out).to be false
+     end
+    end
   end
 end
