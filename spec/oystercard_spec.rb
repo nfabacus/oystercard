@@ -34,29 +34,38 @@ describe Oystercard do
       end
 
    describe '#touch_in' do
-      it { is_expected.to respond_to(:touch_in) }
+       let(:station) {double :station}
+      #it { is_expected.to respond_to(:touch_in) }
 
       it 'should return true' do
         subject.top_up(2)
-        subject.touch_in
+        subject.touch_in(station)
        expect(subject).to be_in_journey
       end
         it 'raises a minimum balance error' do
-         expect {subject.touch_in }.to raise_error "Balance below minimum fare"
+         expect {subject.touch_in(station) }.to raise_error "Balance below minimum fare"
+       end
+       it 'should record the entry station' do
+          subject.top_up(1)
+          subject.touch_in(station)
+          expect(subject.entry_station).to eq station
+          #expect { is_expected.to respond_to(:touch_in).with(1).argument}
+         #expect(subject.touch_in).with(1).argument
        end
    end
 
 
     describe '#touch_out' do
+      let(:station) {double :station}
      it { is_expected.to respond_to(:touch_out) }
 
       it 'should return false' do
-        expect(subject.touch_out).to be false
+        expect(subject.touch_out).to be nil
      end
 
       it 'should deduct min fare from my card' do
         subject.top_up(1)
-        subject.touch_in
+        subject.touch_in(station)
         expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
       end
     end
