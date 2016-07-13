@@ -2,7 +2,7 @@ require "oystercard"
 
 describe Oystercard do
 
-  subject(:card) { Oystercard.new }
+  subject(:card) { described_class.new }
   random_number = rand(Oystercard::LIMIT)
 
   it 'Has a default balance of 0' do
@@ -14,35 +14,45 @@ describe Oystercard do
   end
 
 
-  context do
-    before(:each) { card.top_up(Oystercard::LIMIT) }
+  it "Raises error when top up exceeds limit" do
+    card.top_up(Oystercard::LIMIT)
+    error = "Top up would exceed card limit of £#{Oystercard::LIMIT}"
+    expect{ card.top_up(1) }.to raise_error error
+  end
 
-    it "Raises error when top up exceeds limit" do
-      error = "Top up would exceed card limit of £#{Oystercard::LIMIT}"
-      expect{ card.top_up(1) }.to raise_error error
+
+  describe "#touch_in" do
+    it "Raises an error when insufficient blance" do
+      msg = 'Insufficient balance'
+      expect{ card.touch_in }.to raise_error msg
+    end
+
+    it "Can be touched in when at least minimum balance available" do
+      card.top_up(Oystercard::MIN_BALANCE)
+      card.touch_in
+      expect(card.in_journey?).to eq true
+    end
+  end
+
+
+
+
+  describe "#touch_out" do
+
+    it "Can be touched out" do
+      card.top_up(Oystercard::MIN_BALANCE)
+      card.touch_out
+      expect(card.touch_out).to eq false
     end
 
     it "Deduct the fare from the card" do
-      expect{ card.deduct(random_number) }.to change{ card.balance }.by -random_number
+      card.top_up(Oystercard::MIN_BALANCE)
+      card.touch_in
+      expect{ card.touch_out }.to change{ card.balance }.by -Oystercard::MIN_BALANCE
     end
   end
 
 
-  it "Raises an error when insufficient blance" do
-    msg = 'Insufficient balance'
-    expect{ card.touch_in }.to raise_error msg
-  end
-
-
-  it "Can be touched in" do
-    card.top_up(1)
-    expect(card.touch_in).to eq true
-  end
-
-
-  it "Can be touched out" do
-    expect(card.touch_out).to eq false
-  end
 
 
 
