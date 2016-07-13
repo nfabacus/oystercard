@@ -14,7 +14,7 @@ class Oystercard
   end
 
   def touch_in(station)
-    raise 'Balance is below £1, unable to touch in' if balance_enough?
+    raise "Balance is below £#{MINIMUM_FARE}, unable to touch in" if balance_enough?
     self.station = station
   end
 
