@@ -28,6 +28,7 @@ describe Oystercard do
     end
 
     it 'should set card to in journey when touched in' do
+      subject.top_up(10)
       subject.touch_in
       expect(subject).to be_in_journey
     end
@@ -36,6 +37,10 @@ describe Oystercard do
       subject.touch_out
       expect(subject).not_to be_in_journey
     end
+  end
+
+  it 'Not be able to touch in when balance is below £1' do
+    expect{ subject.touch_in }.to raise_error('Balance is below £1, unable to touch in')
   end
 
 end
