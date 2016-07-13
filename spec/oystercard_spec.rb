@@ -3,7 +3,8 @@ require "oystercard"
 describe Oystercard do
 
   subject(:card) { described_class.new }
-  random_number = rand(Oystercard::LIMIT)
+  random_number = rand(1...Oystercard::LIMIT)
+  let(:station) { double :station }
 
   it 'Has a default balance of 0' do
     expect(card.balance).to eq 0
@@ -21,35 +22,52 @@ describe Oystercard do
   end
 
 
-  describe "#touch_in" do
+  describe "#touch_in(station)" do
     it "Raises an error when insufficient blance" do
       msg = 'Insufficient balance'
-      expect{ card.touch_in }.to raise_error msg
+      expect{ card.touch_in(station) }.to raise_error msg
     end
 
-    it "Can be touched in when at least minimum balance available" do
-      card.top_up(Oystercard::MIN_BALANCE)
-      card.touch_in
-      expect(card.in_journey?).to eq true
+    context do
+      before(:each) {
+                      card.top_up(Oystercard::MIN_BALANCE)
+                      card.touch_in(station)
+                    }
+      it "Can be touched in when at least minimum balance available" do
+        expect(card.in_journey?).to eq true
+      end
+
+      it "Remembers its entry station" do
+        expect(card.entry_station).to eq station
+      end
     end
+
+
   end
 
 
 
 
   describe "#touch_out" do
-
+    before(:each) {
+                    card.top_up(Oystercard::MIN_BALANCE)
+                    card.touch_in(station)
+                  }
     it "Can be touched out" do
-      card.top_up(Oystercard::MIN_BALANCE)
       card.touch_out
-      expect(card.touch_out).to eq false
+      expect(card.touch_out).to be_falsy
     end
+
 
     it "Deduct the fare from the card" do
-      card.top_up(Oystercard::MIN_BALANCE)
-      card.touch_in
       expect{ card.touch_out }.to change{ card.balance }.by -Oystercard::MIN_BALANCE
     end
+
+    it "Forgets the entry station" do
+      card.touch_out
+      expect(card.entry_station).to eq nil
+    end
+
   end
 
 
@@ -64,12 +82,12 @@ describe Oystercard do
 
     before(:each) { card.top_up(7) }
     it "travelling" do
-      card.touch_in
+      card.touch_in(station)
       expect(card).to be_in_journey
     end
 
     it "not travelling if it's touched out" do
-      card.touch_in
+      card.touch_in(station)
       card.touch_out
       expect(card).to_not be_in_journey
     end
