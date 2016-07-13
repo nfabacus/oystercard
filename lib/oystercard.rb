@@ -5,13 +5,12 @@ class Oystercard
   attr_reader :balance, :station
 
   def initialize
-    @balance = 0
-    @in_journey = false
+    self.balance = 0
   end
 
   def top_up(amount)
     raise "Exceeds max allowed amount of #{BALANCE_LIMIT}" if balance_exceeds_limit?(amount)
-    @balance += amount
+    self.balance += amount
   end
 
   def touch_in(station)
@@ -30,7 +29,7 @@ class Oystercard
 
   private
 
-  attr_writer :station
+  attr_writer :balance, :station
 
   def balance_exceeds_limit?(amount)
     balance + amount > BALANCE_LIMIT
@@ -41,7 +40,7 @@ class Oystercard
   end
 
   def deduct(amount)
-    @balance -= amount
+    self.balance -= amount
   end
 
 end
