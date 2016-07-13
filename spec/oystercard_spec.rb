@@ -34,22 +34,26 @@ describe Oystercard do
   end
 
   describe '#in_journey?' do
-    it { is_expected.to respond_to(:in_journey?) } 
+    it { is_expected.to respond_to(:in_journey?) }
 
     it 'should have default value of false' do
       expect(subject.in_journey?).to eq (false)
     end
-  end
+      end
 
-  context 'when user is in and out of journey' do
    describe '#touch_in' do
       it { is_expected.to respond_to(:touch_in) }
 
       it 'should return true' do
+        subject.top_up(2)
         subject.touch_in
        expect(subject).to be_in_journey
       end
+        it 'raises a minimum balance error' do
+         expect {subject.touch_in }.to raise_error "Balance below minimum fare"
+       end
    end
+
 
     describe '#touch_out' do
      it { is_expected.to respond_to(:touch_out) }
@@ -58,5 +62,5 @@ describe Oystercard do
         expect(subject.touch_out).to be false
      end
     end
-  end
+
 end
