@@ -1,9 +1,9 @@
 class Oystercard
   LIMIT = 90
   MINIMUM_FARE = 1
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :exit_station
 
-   def initialize
+  def initialize
     @balance = 0
   end
 
@@ -17,19 +17,20 @@ class Oystercard
   end
 
   def touch_in(station)
-    raise "Balance below minimum fare" if balance < MINIMUM_FARE
+    raise 'Balance below minimum fare' if balance < MINIMUM_FARE
     @entry_station = station
   end
 
-  def touch_out
+  def touch_out(station)
     deduct(MINIMUM_FARE)
+    @exit_station = station
     @entry_station = nil
   end
 
   private
 
   def check_limit(money)
-    (@balance + money)> LIMIT
+    (@balance + money) > LIMIT
   end
 
   def deduct(money)
