@@ -1,7 +1,9 @@
+require_relative 'journey'
+
 class Oystercard
 
   BALANCE_LIMIT = 90
-  MINIMUM_FARE = 1
+
   attr_reader :balance, :journeys
 
   def initialize
@@ -15,13 +17,14 @@ class Oystercard
   end
 
   def touch_in(entry_station)
-    raise "Balance is below £#{MINIMUM_FARE}" if balance_enough?
-    self.journey = Journey.new(entry_station: entry_station)
+    raise "Balance is below £#{Journey::MINIMUM_FARE}" if balance_enough?
+    self.journey = Journey.new(entry_station)
   end
 
   def touch_out(exit_station)
-    deduct(MINIMUM_FARE)
-    self.journey.finish(exit_station)
+    self.journey = Journey.new unless journey
+    deduct(Journey::MINIMUM_FARE)
+    journey.finish(exit_station)
     save_journey
   end
 
@@ -30,14 +33,16 @@ class Oystercard
   end
 
   private
-  attr_writer :balance, :journeys, :journey
+
+  attr_accessor :journey
+  attr_writer :balance, :journeys
 
   def balance_exceeds_limit?(amount)
     balance + amount > BALANCE_LIMIT
   end
 
   def balance_enough?
-    balance < MINIMUM_FARE
+    balance < Journey::MINIMUM_FARE
   end
 
   def deduct(amount)
