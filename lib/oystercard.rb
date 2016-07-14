@@ -1,3 +1,5 @@
+require_relative 'station'
+
 class Oystercard
   LIMIT = 90
   MINIMUM_FARE = 1
@@ -41,5 +43,4 @@ class Oystercard
   def store_journey
    journey << {:entry_station => @entry_station, :exit_station => @exit_station}
   end
-
 end

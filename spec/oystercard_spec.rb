@@ -1,5 +1,7 @@
 require 'oystercard'
+
 TOP_UP = 5
+
 describe Oystercard do
 
     it 'should have default value of 0' do
@@ -63,7 +65,7 @@ describe Oystercard do
     end
 
     describe '#touch_out' do
-    
+
       it 'records the exit station' do
         subject.touch_out(exit_station)
         expect(subject.exit_station).to eq exit_station
@@ -74,8 +76,6 @@ describe Oystercard do
         subject.touch_in(entry_station)
         expect { subject.touch_out(exit_station) }.to change { subject.balance }.by(-Oystercard::MINIMUM_FARE)
       end
-
-
     end
   end
 end
