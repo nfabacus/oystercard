@@ -2,12 +2,11 @@ class Oystercard
 
   BALANCE_LIMIT = 90
   MINIMUM_FARE = 1
-  attr_reader :balance, :journeys, :journey
+  attr_reader :balance, :journeys
 
   def initialize
     self.balance = 0
     self.journeys = []
-    self.journey = Journey.new
   end
 
   def top_up(amount)
@@ -17,8 +16,7 @@ class Oystercard
 
   def touch_in(entry_station)
     raise "Balance is below £#{MINIMUM_FARE}" if balance_enough?
-    self.journey.start(entry_station)
-
+    self.journey = Journey.new(entry_station: entry_station)
   end
 
   def touch_out(exit_station)

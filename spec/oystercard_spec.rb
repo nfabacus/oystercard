@@ -2,7 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
 
-  let(:station) { double(:station) }
+  let(:station) {double :station, zone: 1}
   let(:station_2) { double(:station) }
   let(:current_journey){ {:entry_station => station, :exit_station => station_2} }
   default_topup = 10
@@ -35,23 +35,14 @@ describe Oystercard do
     #   expect(subject).to be_in_journey
     # end
 
-    it 'should set card to NOT be in journey when touched out' do
-      expect{subject.touch_out(station)}.to change{subject.journey.in_journey?}
-    end
-
     it "is getting charged for the journey" do
       expect{ subject.touch_out(station) }.to change{ subject.balance }.by -(Oystercard::MINIMUM_FARE)
     end
 
   end
 
-  it "should set journey to in journey when touched in" do
-    subject.top_up(default_topup)
-    expect{subject.touch_in(station)}.to change{subject.journey.in_journey?}
-
-  end
   context '#journeys' do
-    it "stores entry and exit stations" do
+    xit "stores entry and exit stations" do
       subject.top_up(default_topup)
       subject.touch_in(station)
       subject.touch_out(station_2)

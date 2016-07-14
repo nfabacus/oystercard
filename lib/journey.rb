@@ -1,27 +1,26 @@
 class Journey
-  attr_reader :entry_station, :exit_station, :station
-  def initialize
+  attr_reader :entry_station, :exit_station
 
-  end
-  def start(entry_station)
+  def initialize(entry_station: entry_station)
     self.entry_station = entry_station
-    self.station = entry_station
+    self.complete = false
+    self.in_journey = true
   end
-  def finish(exit_station)
-    self.exit_station = exit_station
-    self.station = nil
-  end
-  def calculate_fare
+
+  def complete?
+    @complete
   end
 
   def in_journey?
-    self.station != nil
+    @in_journey
   end
-  def complete?
+
+  def finish(exit_station)
+    self.exit_station = exit_station
+    self.in_journey = false
+    self.complete = true
   end
 
   private
-  attr_writer :entry_station, :exit_station, :station
-
-
+  attr_writer :complete, :entry_station, :in_journey, :exit_station
 end

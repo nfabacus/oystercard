@@ -1,15 +1,35 @@
 require 'journey'
 describe Journey do
-  let(:station) {double :station}
-  let(:card) {double :card}
-  it "stores entry station" do
-    expect{ subject.start(station) }.to change{ subject.entry_station }.from(nil).to(station)
+  let(:station) {double :station, zone: 1}
+  let(:exit_station) {double :exit_station}
+  subject {described_class.new(entry_station: station)}
+
+  context "on initialization" do
+
+    it { is_expected.not_to be_complete }
+
+    it "should be set entry_station" do
+      expect(subject.entry_station).to eq station
+    end
+
+    it { is_expected.to be_in_journey }
   end
-  it "stores exit station" do
-    expect{ subject.finish(station) }.to change{ subject.exit_station }.from(nil).to(station)
+
+  context "on finish" do
+
+    before do
+      subject.finish(exit_station)
+    end
+
+    it "should be set exit_station" do
+      expect(subject.exit_station).to eq exit_station
+    end
+
+    it { is_expected.not_to be_in_journey }
+    
+    it { is_expected.to be_complete }
+
   end
-  it 'should not be in journey when initiated' do
-    expect(subject).not_to be_in_journey
-  end
+
 
 end
