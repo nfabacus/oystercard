@@ -58,7 +58,7 @@ describe Oystercard do
       expect(subject.journeys).to include journey
     end
 
-    it "should have an empty journeys" do
+    it "should have empty journeys" do
       expect(subject.journeys).to be_empty
     end
   end
