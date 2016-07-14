@@ -1,15 +1,13 @@
 require 'station'
 
 describe Station do
-  let(:name) { :name }
-  let(:zone) { :zone }
-  subject(:station) { described_class.new(name, zone) }
+  subject { described_class.new("London", 1) }
 
   it 'Should equal name' do
-    expect(:name).to eq :name
+    expect(subject.name).to eq "London"
   end
 
   it 'Should equal zone' do
-    expect(:zone).to eq :zone
+    expect(subject.zone).to eq 1
   end
 end
