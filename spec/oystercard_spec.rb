@@ -4,7 +4,7 @@ describe Oystercard do
 
   let(:station) { double(:station) }
   let(:station_2) { double(:station) }
-  let(:journey){ {:entry_station => station, :exit_station => station_2} }
+  let(:current_journey){ {:entry_station => station, :exit_station => station_2} }
   default_topup = 10
 
 
@@ -17,9 +17,7 @@ describe Oystercard do
     expect(subject.balance).to eq 0
   end
 
-  it 'should not be in journey when initiated' do
-    expect(subject).not_to be_in_journey
-  end
+
 
   it 'not be able to touch in when balance is below £1' do
     expect{ subject.touch_in(station) }.to raise_error("Balance is below £#{Oystercard::MINIMUM_FARE}")
@@ -32,30 +30,32 @@ describe Oystercard do
       subject.touch_in(station)
     end
 
-    it 'should set card to in journey when touched in' do
-      expect(subject).to be_in_journey
-    end
+
+    # it 'should set card to in journey when touched in' do
+    #   expect(subject).to be_in_journey
+    # end
 
     it 'should set card to NOT be in journey when touched out' do
-      subject.touch_out(station)
-      expect(subject).not_to be_in_journey
+      expect{subject.touch_out(station)}.to change{subject.journey.in_journey?}
     end
 
     it "is getting charged for the journey" do
       expect{ subject.touch_out(station) }.to change{ subject.balance }.by -(Oystercard::MINIMUM_FARE)
     end
 
-    it 'sets station to nil on touch out' do
-      expect{ subject.touch_out(station) }.to change{ subject.station }.from(station).to(nil)
-    end
   end
 
+  it "should set journey to in journey when touched in" do
+    subject.top_up(default_topup)
+    expect{subject.touch_in(station)}.to change{subject.journey.in_journey?}
+
+  end
   context '#journeys' do
     it "stores entry and exit stations" do
       subject.top_up(default_topup)
       subject.touch_in(station)
       subject.touch_out(station_2)
-      expect(subject.journeys).to include journey
+      expect(subject.journeys).to include current_journey
     end
 
     it "should have empty journeys" do
